@@ -1,6 +1,80 @@
 ﻿@page "/color-game"
+@using System.Threading;
 
 <h1>Color game</h1>
+<div>
+    <label>Score: @score</label>
+</div>
+<div>
+    <label>Remaining time: @remainingTimeInSec sec</label>
+</div>
+<input type="number" bind=@xLength />
+<input type="number" bind=@yLength />
+
+<style>
+    .flex-container {
+        padding: 0;
+        margin: 0;
+        list-style: none;
+        display: -webkit-box;
+        display: -moz-box;
+        display: -ms-flexbox;
+        display: -webkit-flex;
+        display: flex;
+        -webkit-flex-flow: row;
+        justify-content: space-around;
+        line-height: 30px;
+    }
+
+    .flex-item {
+        background: tomato;
+        margin: 5px;
+        color: white;
+        font-weight: bold;
+        font-size: 1.5em;
+        text-align: center;
+        flex: 1 0 auto;
+        height: auto;
+    }
+
+        .flex-item:before {
+            content: '';
+            float: left;
+            padding-top: 100%;
+        }
+</style>
+
+@for (int i = 0; i < yLength; i++)
+{
+    <div class="flex-container">
+        @for (int j = 0; j < xLength; j++)
+        {
+            <div class="flex-item"></div>
+        }
+    </div>
+}
 
 @functions {
+    int xLength = 20;
+    int yLength = 8;
+    int score = 0;
+    int remainingTimeInSec = 60;
+
+    protected override void OnInit()
+    {
+        base.OnInit();
+        StartCountdown();
+    }
+
+    void StartCountdown()
+    {
+        var timer = new Timer(new TimerCallback(_ =>
+        {
+            remainingTimeInSec--;
+
+            // Note that the following line is necessary because otherwise
+            // Blazor would not recognize the state change and not refresh the UI
+            this.StateHasChanged();
+        }), null, 1000, 1000);
+    }
 }
