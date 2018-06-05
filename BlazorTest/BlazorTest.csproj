@@ -13,4 +13,16 @@
     <DotNetCliToolReference Include="Microsoft.AspNetCore.Blazor.Cli" Version="0.3.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <BlazorGenerate Remove="Pages\ColorGame.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="Pages\ColorGame.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Pages\ColorGame.cshtml" />
+  </ItemGroup>
+
 </Project>
