@@ -3,13 +3,24 @@
 
 <h1>Color game</h1>
 <div>
-    <label>Score: @score</label>
+    <h2><label>Score: @score</label></h2>
 </div>
 <div>
     <label>Remaining time: @remainingTimeInSec sec</label>
 </div>
-<input type="number" bind=@xLength />
-<input type="number" bind=@yLength />
+<div>
+    @if (gameInProgress)
+    {
+        <button class="btn btn-primary" onclick="@StopGame">End game</button>
+    }
+    else
+    {
+        <button class="btn btn-primary" onclick="@StartGame">Start game</button>
+    }
+</div>
+
+@*<input type="number" bind=@xLength />
+<input type="number" bind=@yLength />*@
 
 <style>
     .flex-container {
@@ -49,32 +60,80 @@
     <div class="flex-container">
         @for (int j = 0; j < xLength; j++)
         {
-            <div class="flex-item"></div>
+            <div class="flex-item" onclick="@CellClicked"></div>
         }
     </div>
 }
 
 @functions {
+    static int setting_remainingTimeInSec = 60;
+
     int xLength = 20;
     int yLength = 8;
     int score = 0;
-    int remainingTimeInSec = 60;
+    int remainingTimeInSec = 0;
+    bool gameInProgress = false;
+
+    Timer timer;
 
     protected override void OnInit()
     {
         base.OnInit();
-        StartCountdown();
-    }
 
-    void StartCountdown()
-    {
-        var timer = new Timer(new TimerCallback(_ =>
+        timer = new Timer(new TimerCallback(_ =>
         {
+            Console.WriteLine("Timer callback executing");
+
+            if(remainingTimeInSec <= 0)
+            {
+                StopGame();
+                return;
+            }
+
             remainingTimeInSec--;
 
             // Note that the following line is necessary because otherwise
             // Blazor would not recognize the state change and not refresh the UI
             this.StateHasChanged();
-        }), null, 1000, 1000);
+        }), null, Timeout.Infinite, Timeout.Infinite);
+
+    }
+
+    void StartGame()
+    {
+        remainingTimeInSec = setting_remainingTimeInSec;
+        gameInProgress = true;
+        score = 0;
+
+        StartTimer();
+    }
+
+    void StopGame()
+    {
+        remainingTimeInSec = 0;
+        gameInProgress = false;
+        score = 0;
+
+        StopTimer();
+    }
+
+    void StartTimer()
+    {
+        timer.Change(0, 1000);
+    }
+
+    void StopTimer()
+    {
+        timer.Change(Timeout.Infinite, Timeout.Infinite);
+    }
+
+    void CellClicked()
+    {
+        Console.WriteLine("CellClicked");
+
+        if (gameInProgress)
+        {
+            score++;
+        }
     }
 }
