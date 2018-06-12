@@ -13,4 +13,8 @@
     <DotNetCliToolReference Include="Microsoft.AspNetCore.Blazor.Cli" Version="0.3.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ColorGame.Component\ColorGame.Component.csproj" />
+  </ItemGroup>
+
 </Project>

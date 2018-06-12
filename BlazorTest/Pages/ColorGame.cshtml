@@ -1,5 +1,8 @@
 ﻿@page "/color-game"
 @using System.Threading;
+@using System.Drawing;
+@using ColorGameComponent;
+@inject IColorGenerator ColorGenerator;
 
 <h1>Color game</h1>
 <div>
@@ -38,7 +41,6 @@
     }
 
     .flex-item {
-        background: tomato;
         margin: 5px;
         color: white;
         font-weight: bold;
@@ -60,10 +62,10 @@
     }
 
     .flex-item:before {
-            content: '';
-            float: left;
-            padding-top: 100%;
-        }
+        content: '';
+        float: left;
+        padding-top: 100%;
+    }
 </style>
 
 @if (gameInProgress)
@@ -77,11 +79,11 @@
 
                 if (isSelectedCell)
                 {
-                    <div class="flex-item-selected" onclick="@CellClicked"></div>
+                    <div class="flex-item-selected" style='background-color: rgb(@selectedColor.R,@selectedColor.G,@selectedColor.B)' onclick="@CellClicked"></div>
                 }
                 else
                 {
-                    <div class="flex-item"></div>
+                    <div class="flex-item" style='background-color: rgb(@baseColor.R,@baseColor.G,@baseColor.B)'></div>
                 }
             }
         </div>
@@ -89,21 +91,23 @@
 }
 
 @functions {
-    static int setting_remainingTimeInSec = 10;
+        static int setting_remainingTimeInSec = 10;
 
-    int xLength = 20;
-    int yLength = 8;
-    int score = 0;
-    int remainingTimeInSec = 0;
-    bool gameInProgress = false;
+        int xLength = 20;
+        int yLength = 8;
+        int score = 0;
+        int remainingTimeInSec = 0;
+        bool gameInProgress = false;
 
-    int selectedCellX = 0;
-    int selectedCellY = 0;
+        int selectedCellX = 0;
+        int selectedCellY = 0;
 
-    Timer timer;
-    Random rnd = new Random();
+        Timer timer;
+        Random rnd = new Random();
+        Color baseColor = Color.Tomato;
+        Color selectedColor;
 
-    protected override void OnInit()
+protected override void OnInit()
     {
         base.OnInit();
 
@@ -172,5 +176,6 @@
     {
         selectedCellX = rnd.Next(0, xLength);
         selectedCellY = rnd.Next(0, yLength);
+        //selectedColor = ColorGenerator.GenerateColor(baseColor, 1);
     }
 }

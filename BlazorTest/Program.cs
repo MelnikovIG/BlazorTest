@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Blazor.Browser.Rendering;
 using Microsoft.AspNetCore.Blazor.Browser.Services;
 using Microsoft.Extensions.DependencyInjection;
-using System;
+using ColorGame.Component;
+using ColorGameComponent;
 
 namespace BlazorTest
 {
@@ -11,7 +12,9 @@ namespace BlazorTest
         {
             var serviceProvider = new BrowserServiceProvider(services =>
             {
-                // Add any custom services here
+                // ColorGame services
+                services.AddSingleton<IGameConfiguration, GameConfiguration>();
+                services.AddSingleton<IColorGenerator, ColorGenerator>();
             });
 
             new BrowserRenderer(serviceProvider).AddComponent<App>("app");
