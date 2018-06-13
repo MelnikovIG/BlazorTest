@@ -13,8 +13,7 @@ namespace BlazorTest
             var serviceProvider = new BrowserServiceProvider(services =>
             {
                 // ColorGame services
-                services.AddSingleton<IGameConfiguration, GameConfiguration>();
-                services.AddSingleton<IColorGenerator, ColorGenerator>();
+                services.RegisterColorGameServices();
             });
 
             new BrowserRenderer(serviceProvider).AddComponent<App>("app");
