@@ -4,6 +4,7 @@ namespace ColorGameComponent
 {
     public interface IColorGenerator
     {
-        Color GenerateColor(Color baseColor, int currentLevel);
+        Color GenerateBorderCellColor(Color baseColor);
+        Color GenerateSelectedCellColor(Color borderColor, int currentLevel);
     }
 }

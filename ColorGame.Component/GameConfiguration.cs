@@ -6,8 +6,8 @@ namespace ColorGame.Component
 {
     public class GameConfiguration : IGameConfiguration
     {
-        public int MaxGameLevel { get; set; } = 100;
-        public int MaxColorSpread { get; set; } = 100;
-        public int MinColorSpread { get; set; } = 10;
+        public int MaxGameLevel { get; set; } = 15;
+        public int MaxColorSpread { get; set; } = 15;
+        public int MinColorSpread { get; set; } = 7;
     }
 }

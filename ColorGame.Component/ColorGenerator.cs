@@ -14,15 +14,22 @@ namespace ColorGameComponent
             GameConfiguration = gameConfiguration;
         }
 
-        public Color GenerateColor(Color baseColor, int currentLevel)
+        public Color GenerateSelectedCellColor(Color baseColor, int currentLevel)
         {
-            var levelsCompletePercent = (GameConfiguration.MaxGameLevel - currentLevel) / (float)currentLevel;
-            var spreadDiff = GameConfiguration.MaxColorSpread - GameConfiguration.MinColorSpread;
-            var diff = (int)(spreadDiff * levelsCompletePercent);
+            if (currentLevel > GameConfiguration.MaxGameLevel)
+            {
+                currentLevel = GameConfiguration.MaxGameLevel;
+            }
 
-            var newR = GetColorPart(baseColor.R, diff);
-            var newG = GetColorPart(baseColor.G, diff);
-            var newB = GetColorPart(baseColor.B, diff);
+            var levelsCompletePercent = (GameConfiguration.MaxGameLevel - currentLevel) / (float)GameConfiguration.MaxGameLevel;
+            var maxSpreadDiff = GameConfiguration.MaxColorSpread - GameConfiguration.MinColorSpread;
+
+            var minDiff = GameConfiguration.MinColorSpread;
+            var maxDiff = (int)(GameConfiguration.MinColorSpread + maxSpreadDiff * levelsCompletePercent);
+
+            var newR = GetColorPart(baseColor.R, minDiff, maxDiff);
+            var newG = GetColorPart(baseColor.G, minDiff, maxDiff);
+            var newB = GetColorPart(baseColor.B, minDiff, maxDiff);
 
             return Color.FromArgb(baseColor.A, newR, newG, newB);
         }
@@ -37,8 +44,10 @@ namespace ColorGameComponent
             return basePart - GameConfiguration.MinColorSpread - diff;
         }
 
-        private int GetColorPart(int basePart, int diff)
+        private int GetColorPart(int basePart, int minDiff, int maxDiff)
         {
+            var diff = rnd.Next(minDiff, maxDiff);
+
             var upColor = GetUpColor(basePart, diff);
             var downColor = GetDownColor(basePart, diff);
 
@@ -52,8 +61,20 @@ namespace ColorGameComponent
             }
             else
             {
-                return rnd.Next(0, 1) > 0 ? upColor : downColor;
+                return rnd.Next(100) % 2 > 0 ? upColor : downColor;
             }
+        }
+
+        public Color GenerateBorderCellColor(Color baseColor)
+        {
+            var maxDiff = 10;
+            var minDiff = 5;
+
+            var newR = GetColorPart(baseColor.R, minDiff, maxDiff);
+            var newG = GetColorPart(baseColor.G, minDiff, maxDiff);
+            var newB = GetColorPart(baseColor.B, minDiff, maxDiff);
+
+            return Color.FromArgb(baseColor.A, newR, newG, newB);
         }
     }
 }

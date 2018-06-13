@@ -22,9 +22,6 @@
     }
 </div>
 
-@*<input type="number" bind=@xLength />
-    <input type="number" bind=@yLength />*@
-
 <style>
     .flex-container {
         padding: 0;
@@ -83,7 +80,7 @@
                 }
                 else
                 {
-                    <div class="flex-item" style='background-color: rgb(@baseColor.R,@baseColor.G,@baseColor.B)'></div>
+                    <div class="flex-item" style='background-color: rgb(@boardColor.R,@boardColor.G,@boardColor.B)'></div>
                 }
             }
         </div>
@@ -91,11 +88,12 @@
 }
 
 @functions {
-        static int setting_remainingTimeInSec = 10;
+        static int setting_remainingTimeInSec = 30;
 
         int xLength = 20;
         int yLength = 8;
         int score = 0;
+        int gameLevel = 0;
         int remainingTimeInSec = 0;
         bool gameInProgress = false;
 
@@ -105,6 +103,7 @@
         Timer timer;
         Random rnd = new Random();
         Color baseColor = Color.Tomato;
+        Color boardColor;
         Color selectedColor;
 
 protected override void OnInit()
@@ -138,6 +137,7 @@ protected override void OnInit()
         remainingTimeInSec = setting_remainingTimeInSec;
         gameInProgress = true;
         score = 0;
+        gameLevel = 0;
 
         StartTimer();
     }
@@ -147,6 +147,7 @@ protected override void OnInit()
         remainingTimeInSec = 0;
         gameInProgress = false;
         score = 0;
+        gameLevel = 0;
 
         StopTimer();
     }
@@ -168,14 +169,18 @@ protected override void OnInit()
         if (gameInProgress)
         {
             score++;
+            gameLevel++;
             SelectNewCell();
         }
     }
 
     private void SelectNewCell()
     {
+        boardColor = ColorGenerator.GenerateBorderCellColor(baseColor);
+        Console.WriteLine(boardColor.ToString());
+
         selectedCellX = rnd.Next(0, xLength);
         selectedCellY = rnd.Next(0, yLength);
-        //selectedColor = ColorGenerator.GenerateColor(baseColor, 1);
+        selectedColor = ColorGenerator.GenerateSelectedCellColor(boardColor, gameLevel);
     }
 }
